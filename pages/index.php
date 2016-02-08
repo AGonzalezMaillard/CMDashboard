@@ -1,7 +1,3 @@
-   <?php
-include './cabecera.html';
-?>
-
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
@@ -10,7 +6,7 @@ include './cabecera.html';
                 <!-- /.col-lg-12 -->
             </div>
             <!-- /.row -->
-            <a href="tables.php">
+            <a href="tablas">
                <div class="col-lg-3 col-md-6">
                     <div class="panel panel-green">
                         <div class="panel-heading">
@@ -32,7 +28,7 @@ include './cabecera.html';
                         </a>
                     </div>
                 </div>
-                <a href="forms.php">
+                <a href="crear">
                 <div class="col-lg-3 col-md-6">
                     <div class="panel panel-primary">
                         <div class="panel-heading">
@@ -54,7 +50,7 @@ include './cabecera.html';
                         </a>
                     </div>
                 </div>
-                <a href="settings.php">
+                <a href="settings">
                 <div class="col-lg-3 col-md-6">
                     <div class="panel panel-red">
                         <div class="panel-heading">
