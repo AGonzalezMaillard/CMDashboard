@@ -9,8 +9,8 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>INCIDE - Case Management Dashboard</title>
-
+    <title>INCIDE - CMDashboard</title>
+	<link rel="icon" type="image/ico" href="favicon.ico">
     <!-- Bootstrap Core CSS -->
     <link href="../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -56,7 +56,7 @@
                                     </label>
                                 </div>
                                 <!-- Change this to a button or input when using this as a form -->
-                                <a href="index.html" class="btn btn-lg btn-success btn-block">Login</a>
+                                <a href="panel" class="btn btn-lg btn-success btn-block">Login</a>
                             </fieldset>
                         </form>
                     </div>
