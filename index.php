@@ -1,8 +1,8 @@
 <?php
-$logged = false;
+session_start();
+//$logged = false;
 
-// if not logged => login
-//if($logged==false){
+if (!isset($_SESSION['logged']) /*&& $_SESSION['logged']==true*/) {
 $url = "";
 if(isset($_GET['url'])) $url = $_GET['url'];
 
@@ -10,25 +10,41 @@ if(isset($_GET['url'])) $url = $_GET['url'];
 //$logged = true;
 
 
+
 switch ($url) {
     case "tablas":
+    	include "pages/cabecera.html";
         include "pages/tables.php";
         break;
     case "buscar":
-        echo "pages/searches.php";
+    	include "pages/cabecera.html";
+        include "pages/searches.php";
         break;
     case "crear":
-        echo "pages/forms.php";
+    	include "pages/cabecera.html";
+        include "pages/forms.php";
         break;
     case "settings":
-        echo "pages/settings.php";
+    	include "pages/cabecera.html";
+        include "pages/settings.php";
         break;
+    case "panel":
+    	include "pages/cabecera.html";
+        include "pages/index.php";
+   		break;
+   	case "login":
+        include "pages/login.php";
+   		break;	
+   	case "logout":
+        include "pages/login.php";
+   		break;		
     default;
-        echo "pages/index.php";
+    	include "pages/cabecera.html";
+        include "pages/index.php";
    		break;
 }
+} else {
+include "pages/login.php";
 }
-
-
 
 ?>
