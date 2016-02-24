@@ -1,9 +1,9 @@
- 		<?php
+	<?php
     $servername = "localhost";
     $username = 'root';
     $password = "";
     $dbname = "cmd";
-    
+
     // Create connection
     $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -37,7 +37,7 @@
                                     <div class="form-group input-group">
                                             <input type="text" name="nombreempresa" value="" class="form-control" placeholder="Enter text">
                                             <span class="input-group-btn">
-                                                <button class="btn btn-default" type="button"><i class="fa fa-search"></i>
+                                                <button class="btn btn-default" type="submit" name="buscar"><i class="fa fa-search"></i>
                                                 </button>
                                             </span>
                                         </div>
@@ -127,6 +127,12 @@ echo "<option value=".utf8_encode($row['idPersona']).">".utf8_encode($row['nombr
 }?>
 						 </select></div></div>
                                 <div class="col-lg-6">
+                                
+                                	<div class="form-group">
+                                            <input type="hidden" name="idpersona" value="" class="form-control">
+                                        </div>
+                                
+                                
                                      <div class="form-group">
                                             <label>Nombre</label>
                                             <input type="text" name="nombrepersona" value="" class="form-control" placeholder="Enter text">
@@ -201,7 +207,7 @@ echo "<option value=".utf8_encode($row['idPersona']).">".utf8_encode($row['nombr
                                            <div class="form-group">
                                             <label>Nombre</label>
                                             <input type="text" name="nombreexpediente" value="" class="form-control" placeholder="Enter text">
-                                        </div>
+                                        	</div>
                                           
                                           <label>Tipo de Caso</label>
                          			 		<div class="form-group input-group">
@@ -211,7 +217,7 @@ echo "<option value=".utf8_encode($row['idPersona']).">".utf8_encode($row['nombr
 $sql = "SELECT * FROM `tiposdecaso`";
 $resultado_consulta_mysql = mysqli_query($conn, $sql);
 while ($row = mysqli_fetch_array($resultado_consulta_mysql)) {
-echo "<option value=".utf8_encode($row['idTipoDeCaso']).">".utf8_encode($row['tipoDeCaso'])."</option>";
+echo "<option value=\"".utf8_encode($row['tipoDeCaso'])."\">".utf8_encode($row['tipoDeCaso'])."</option>";
 }?>
                                             </select></div>
                                           
@@ -223,7 +229,7 @@ echo "<option value=".utf8_encode($row['idTipoDeCaso']).">".utf8_encode($row['ti
 $sql = "SELECT * FROM `estadoexpediente`";
 $resultado_consulta_mysql = mysqli_query($conn, $sql);
 while ($row = mysqli_fetch_array($resultado_consulta_mysql)) {
-echo "<option value=".utf8_encode($row['idEstado']).">".utf8_encode($row['estado'])."</option>";
+echo "<option value=\"".utf8_encode($row['estado'])."\">".utf8_encode($row['estado'])."</option>";
 }?>
                                             </select></div>
                                             
@@ -241,7 +247,19 @@ echo "<option value=".utf8_encode($row['idEstado']).">".utf8_encode($row['estado
                                 <div class="col-lg-6">  
                                     <label>Consultor</label>
                          			 <div class="form-group input-group">
-                                            <select name="consultor" class="form-control">
+                                            <select name="trabajador" class="form-control">
+<?php     
+//listar trabajadores para que se seleccione consultor        
+$sql = "SELECT * FROM `trabajador`";
+$resultado_consulta_mysql = mysqli_query($conn, $sql);
+while ($row = mysqli_fetch_array($resultado_consulta_mysql)) {
+echo "<option value=".utf8_encode($row['idTrabajador']).">".utf8_encode($row['nombre'])."</option>";
+}
+?>
+                                            </select></div>
+                                     <label>Analista</label>     
+                                    <div class="form-group input-group">
+                                            <select name="trabajador2" class="form-control">
 <?php     
 //listar trabajadores para que se seleccione consultor        
 $sql = "SELECT * FROM `trabajador`";
@@ -252,18 +270,6 @@ echo "<option value=".utf8_encode($row['idTrabajador']).">".utf8_encode($row['no
 ?>
                                             </select></div>
                                           
-                                    <label>Analista principal</label>
-                         			 <div name="analista" class="form-group input-group">
-                                            <select class="form-control">
-<?php     
-//Listar trabajadores para que se seleccione trabajador        
-$sql = "SELECT * FROM `trabajador`";
-$resultado_consulta_mysql = mysqli_query($conn, $sql);
-while ($row = mysqli_fetch_array($resultado_consulta_mysql)) {
-echo "<option value=".utf8_encode($row['idTrabajador']).">".utf8_encode($row['nombre'])."</option>";
-}
-?>
-                                            </select></div>
                                 	
                                 	<label>Prioridad</label>      
                          			 <div class="form-group input-group">
@@ -286,7 +292,7 @@ echo "<option value=".utf8_encode($row['idPrioridad']).">".utf8_encode($row['pri
 $sql = "SELECT * FROM `estadosfacturacion`";
 $resultado_consulta_mysql = mysqli_query($conn, $sql);
 while ($row = mysqli_fetch_array($resultado_consulta_mysql)) {
-echo "<option value=".utf8_encode($row['idEstadoFacturacion']).">".utf8_encode($row['estadoFacturacion'])."</option>";
+echo "<option value=\"".utf8_encode($row['estadoFacturacion'])."\">".utf8_encode($row['estadoFacturacion'])."</option>";
 }?>
                                             </select></div>
                                             <div class="form-group">
@@ -337,7 +343,17 @@ echo "<option value=".utf8_encode($row['idEstadoFacturacion']).">".utf8_encode($
 </html>
 
 <?php
-        
+
+   //Buscar persona
+   
+	if (isset($_POST['buscar'])) {
+    $sql = "SELECT `nombre` FROM `empresa`";
+    if ($conn->query($sql) === TRUE) {
+    echo "Buscando";   
+    } else {
+    echo "Error: " . $sql . "<br>" . $conn->error;
+	}
+    }  
     //Crear empresa     
     if (isset($_POST['creaempresa'])) {
     $nombreempresa=$_POST['nombreempresa'];
@@ -378,6 +394,7 @@ echo "<option value=".utf8_encode($row['idEstadoFacturacion']).">".utf8_encode($
 	
 	if ($conn->query($sql) === TRUE) {
 	$idpersonaprincipal = $conn->insert_id;
+	$idpersona = $idpersonaprincipal;
 	echo "Persona creada correctamente: ".$nombrepersona." ".$apellidospersona.". ID ".$idpersonaprincipal;
 			
 			//Una vez creada la persona la ponemos como principal si así se indica	
@@ -394,17 +411,48 @@ echo "<option value=".utf8_encode($row['idEstadoFacturacion']).">".utf8_encode($
     }
     
     
-     
-    
     //Actualizar persona
     if (isset($_POST['actualizapersona'])) {
         echo "Persona actualizada correctamente";    
     }
+    
+    
+    
+      $idpersona = 2;
     //Crear expediente
     if (isset($_POST['creaexpediente'])) {
+    $nombreempresa=$_POST['nombreempresa'];
+    $nombreexpediente=$_POST['nombreexpediente'];
     $idtipo=$_POST['tipocaso'];
-        echo $_POST['tipocaso'];    
+    $estadoexpediente =$_POST['estadoexpediente'];
+    $presupuesto =$_POST['presupuesto'];
+    $consultor=$_POST['trabajador'];
+    $analista=$_POST['trabajador2'];
+    $prioridad=$_POST['prioridad'];
+    $estadofacturacion =$_POST['estadofacturacion'];
+    $idpersonae= $idpersona;
+    $observacionesexpediente=$_POST['observacionesexpediente']; 
+    $sql = "INSERT INTO `expediente`(`nombre`, `tipoDeCaso`, `estado`, `cliente`, `idPersona`, 
+    `presupuesto`, `consultor`, `analistaPrincipal`, `prioridad`, `fechaOportunidad`, 
+    `estadoFacturacion`, `observaciones`) 
+    VALUES (\"".utf8_decode($nombreexpediente)."\",\"".utf8_decode($idtipo)."\",
+    \"".utf8_decode($estadoexpediente)."\",\"".utf8_decode($nombreempresa)."\",
+    \"".utf8_decode($idpersonae)."\",\"".utf8_decode($presupuesto)."\",\"".utf8_decode($consultor)."\",
+    \"".utf8_decode($analista)."\",\"".utf8_decode($prioridad)."\",CURRENT_DATE,
+    \"".utf8_decode($estadofacturacion)."\",\"".utf8_decode($observacionesexpediente)."\")";
+    
+	if ($conn->query($sql) === TRUE) {
+	$idexpediente = $conn->insert_id;
+	echo "Expediente creado correctamente: ".$idexpediente."-".$nombreexpediente;
+	} else {
+    echo "Error: " . $sql . "<br>" . $conn->error;
+	}
     }
+    
+    
+    
+    
+    
     //Actualizar expediente
     if (isset($_POST['actualizaexpediente'])) {
         echo "Expediente actualizado correctamente";    
