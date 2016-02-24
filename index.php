@@ -1,7 +1,9 @@
 <?php
 session_start();
 //$logged = false;
-
+    $nombreempresa;
+    $idpersona;
+    $idexpediente;
 if (!isset($_SESSION['logged']) /*&& $_SESSION['logged']==true*/) {
 $url = "";
 if(isset($_GET['url'])) $url = $_GET['url'];
