@@ -1,8 +1,22 @@
-	<?php
+		<?php
     $servername = "localhost";
     $username = 'root';
     $password = "";
     $dbname = "cmd";
+    $nombreempresa="";
+    $nombreexpediente="";
+    $idtipo="";
+    $estadoexpediente ="";
+    $presupuesto ="";
+    $consultor="";
+    $analista="";
+    $prioridad="";
+    $estadofacturacion="";
+    $idpersona="";
+    $observacionesexpediente=""; 
+    $modificar=false;
+        
+    $id= isset($_GET['idexpedientemod']) ? $_GET['idexpedientemod'] : "Autogenerado";
 
     // Create connection
     $conn = new mysqli($servername, $username, $password, $dbname);
@@ -12,178 +26,46 @@
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
         
-    }?>
+    }
+    
+    if (isset($_GET['idexpedientemod'])){ 
+    $modificar=true;
+    $sql="SELECT * FROM `expediente` e WHERE e.`idExpediente`= $id";
+    $result = mysqli_query($conn, $sql);
+    
+    if (mysqli_num_rows($result) > 0) {
+    while($row = mysqli_fetch_assoc($result)) {
+    $nombreempresa= utf8_encode($row["idCliente"]);
+    $nombreexpediente = utf8_encode($row["nombre"]);
+    $idtipo=utf8_encode($row["tipoDeCaso"]);
+    $estadoexpediente =utf8_encode($row["estado"]);
+    $presupuesto=$row["presupuesto"];
+    $consultor=utf8_encode($row["consultor"]);
+    $analista=utf8_encode($row["analistaPrincipal"]);
+    $prioridad=utf8_encode($row["prioridad"]);
+    $estadofacturacion=utf8_encode($row["estadoFacturacion"]);
+    $idpersona=utf8_encode($row["idPersona"]);
+    $observacionesexpediente=utf8_encode($row["observaciones"]);
+    $modificar=false;
+    
+ 
+    
+    }
+   } else{
+       echo "0 results";
+   }
+    
+   }
+    
+    
+    
+    ?>
     <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
                     <h1 class="page-header">Crear caso</h1>
                 </div>
                 <!-- /.col-lg-12 -->
-            </div>
-            <!-- /.row -->
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Empresa
-                        </div>
-                        <div class="panel-body">
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <form role="form" action="/crear" method="post">
-                                        
-                                            
-                                     <label>Nombre</label>
-                                    <div class="form-group input-group">
-                                            <input type="text" name="nombreempresa" value="" class="form-control" placeholder="Enter text">
-                                            <span class="input-group-btn">
-                                                <button class="btn btn-default" type="submit" name="buscar"><i class="fa fa-search"></i>
-                                                </button>
-                                            </span>
-                                        </div>
-                                          
-                                        
-                                      <div class="form-group">
-                                            <label>Dirección</label>
-                                            <input type="text" name="direccionempresa" value="" class="form-control" placeholder="Enter text">
-                                        </div>
-                                        
-                                        <div class="form-group">
-                                            <label>Provincia</label>
-                                            <input type="text" name="provinciaempresa" value="" class="form-control" placeholder="Enter text">
-                                        </div>
-                                      
-                                      
-                                      <div class="form-group">
-                                            <label>Teléfono</label>
-                                            <input type="tel" name="telempresa" value="" class="form-control" placeholder="Enter text">
-                                        </div>
-
-								</div>
-                                <!-- /.col-lg-6 (nested) -->
-                                <div class="col-lg-6">
-                                        
-                                        <div class="form-group">
-                                            <label>CIF</label>
-                                            <input type="text" name="cifempresa" value="" class="form-control" placeholder="Enter text">
-                                        </div>
-                                        
-                                        <div class="form-group">
-                                            <label>Municipio</label>
-                                            <input type="text" name="municipioempresa" value="" class="form-control" placeholder="Enter text">
-                                        </div>
-                                        
-                                        <div class="form-group">
-                                            <label>CP</label>
-                                            <input type="number" name="cpempresa" value="" class="form-control" placeholder="Enter text">
-                                        </div>
-                                        
-                                            <label>Email</label>
-                                      <div class="form-group input-group">
-                                            <span class="input-group-addon">@</span>
-                                            <input type="text" name="emailempresa" value="" class="form-control" placeholder="Enter email">
-                                        </div>
-                                      
-                                      
-                                      
-                                
-                                </div>
-                           
-                                <!-- /.col-lg-6 (nested) -->
-                            </div>
-                                        <button type="submit" name="creaempresa" value="creaempresa2" class="btn btn-default">Crear empresa</button>
-                                        <button type="submit" name="actualizaempresa2" value="actualizaempresa"class="btn btn-default">Actualizar empresa</button>
-                            <!-- /.row (nested) -->
-                            
-                        </div>
-                        <!-- /.panel-body -->
-                        
-                        
-                    </div>
-                    <!-- /.panel -->
-
-                    <div class="row">
-                <div class="col-lg-12">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Persona
-                          
-                        </div>
-                        <div class="panel-body">
-                            <div class="row">
-                            <div class="form-group"> 
-                           
-                             <div class="col-lg-12">
-                            <label>Personas</label>
-                            <div name="idpersona" class="form-group input-group">
-                                            <select class="form-control">
-        
-<?php       
-//listar personas           
-$sql = "SELECT * FROM `persona`";
-$resultado_consulta_mysql = mysqli_query($conn, $sql);
-while ($row = mysqli_fetch_array($resultado_consulta_mysql)) {
-echo "<option value=".utf8_encode($row['idPersona']).">".utf8_encode($row['nombre'])." ".utf8_encode($row['apellidos'])."</option>";
-}?>
-						 </select></div></div>
-                                <div class="col-lg-6">
-                                
-                                	<div class="form-group">
-                                            <input type="hidden" name="idpersona" value="" class="form-control">
-                                        </div>
-                                
-                                
-                                     <div class="form-group">
-                                            <label>Nombre</label>
-                                            <input type="text" name="nombrepersona" value="" class="form-control" placeholder="Enter text">
-                                        </div>
-                                          
-                                        
-                                      <div class="form-group">
-                                            <label>Teléfono</label>
-                                            <input type="tel" name="telpersona" value="" class="form-control" placeholder="Enter text">
-                                        </div>
-                                        
-                                                                                 
-                                    	<label>Email</label>
-                                      <div class="form-group input-group">
-                                            <span class="input-group-addon">@</span>
-                                            <input type="text" name="emailpersona" value="" class="form-control" placeholder="Enter email">
-                                        </div>
-                             		<div class="form-group">  
-                                            <input type="checkbox" name="personaprincipal" value="" checked> Persona principal<br>
-                           			</div>
-								</div>
-								<!-- /.col-lg-6 (nested) -->
-                                <div class="col-lg-6">
-                                        
-                                        <div class="form-group">
-                                            <label>Apellidos</label>
-                                            <input type="text" name="apellidospersona" value="" class="form-control" placeholder="Enter text">
-                                        </div>
-                                        
-                                        <div class="form-group">
-                                            <label>Teléfono 2</label>
-                                            <input type="text" name="tel2persona" value="" class="form-control" placeholder="Enter text">
-                                        </div>
-                                        
-                                 	 <div class="form-group">
-                                            <label>Observaciones</label>
-                                            <textarea name="observacionespersona" value="" class="form-control" rows="3"></textarea>
-                                        </div>
-                                      
-                                </div>
-                                <!-- /.col-lg-6 (nested) -->
-                            </div>
-                            <!-- /.row (nested) -->
-   
-						</div>
-                               <button type="submit" name="creapersona" value="creapersona" class="btn btn-default">Crear persona</button>
-                                <button type="submit" name="actualizapersona" name="valuepersona" class="btn btn-default">Actualizar persona</button>    
-                </div>
-                <!-- /.col-lg-12 -->
-                
-                
             </div>
             <!-- /.row -->
             
@@ -196,18 +78,45 @@ echo "<option value=".utf8_encode($row['idPersona']).">".utf8_encode($row['nombr
                         </div>
                         <div class="panel-body">
                             <div class="row">
-                                <div class="col-lg-6">
-                                
-                                    
+                                <div class="col-lg-6">                                   
                                     <div class="form-group">
+                                    <form role="form" action="/crear" method="post">
                                             <label>Id Expediente</label>
-                                            <p class="form-control-static"></p>
+                                            <p class="form-control-static"><?php echo $id;?></p>
                                         </div>
                                     
                                            <div class="form-group">
                                             <label>Nombre</label>
-                                            <input type="text" name="nombreexpediente" value="" class="form-control" placeholder="Enter text">
+                                            <input type="text" name="nombreexpediente" value="<?php echo $nombreexpediente?>" class="form-control" placeholder="Enter text">
                                         	</div>
+                                          
+                                          <label>Empresa</label>
+<button type='submit' name='modempresa' class='btn btn-default btn-circle' value="<?php echo $_POST['nombreempresa'];?>"><p class='fa fa-pencil'/p></button>
+<button type='submit' name='crearempresa' class='btn btn-default btn-circle' value=""><b>+</b></button>
+
+
+
+<!--                                   <div class="form-group input-group">
+                                            <input type="text" name="nombreempresa" value="" class="form-control" placeholder="Enter text">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-default" type="submit" name="buscar"><i class="fa fa-search"></i>
+                                                </button>
+                                            </span>
+                                        </div>-->
+                                        <div class="form-group input-group">
+                                            <select name="nombreempresa" class="form-control">
+<?php     
+//listar tipos de caso             
+$sql = "SELECT * FROM `empresa`";
+$resultado_consulta_mysql = mysqli_query($conn, $sql);
+while ($row = mysqli_fetch_array($resultado_consulta_mysql)) {
+$idEmpresaSeleccion=utf8_encode($row['idEmpresa']);
+echo "<option value=\"".$idEmpresaSeleccion."\"";
+if ($idEmpresaSeleccion == $nombreempresa){echo "selected=\"selected\"";}
+echo ">".utf8_encode($row['nombre'])."</option>";
+}?>
+                                            </select>
+                                            </div>  
                                           
                                           <label>Tipo de Caso</label>
                          			 		<div class="form-group input-group">
@@ -217,10 +126,12 @@ echo "<option value=".utf8_encode($row['idPersona']).">".utf8_encode($row['nombr
 $sql = "SELECT * FROM `tiposdecaso`";
 $resultado_consulta_mysql = mysqli_query($conn, $sql);
 while ($row = mysqli_fetch_array($resultado_consulta_mysql)) {
-echo "<option value=\"".utf8_encode($row['tipoDeCaso'])."\">".utf8_encode($row['tipoDeCaso'])."</option>";
+$tipoCasoSeleccion=utf8_encode($row['tipoDeCaso']);
+echo "<option value=\"".$tipoCasoSeleccion."\"";
+if ($tipoCasoSeleccion == $idtipo){echo "selected=\"selected\"";}
+echo ">".$tipoCasoSeleccion."</option>";
 }?>
                                             </select></div>
-                                          
                                            <label>Estado del expediente</label>
                          			 		<div class="form-group input-group">
                                             <select name="estadoexpediente" class="form-control">
@@ -229,7 +140,11 @@ echo "<option value=\"".utf8_encode($row['tipoDeCaso'])."\">".utf8_encode($row['
 $sql = "SELECT * FROM `estadoexpediente`";
 $resultado_consulta_mysql = mysqli_query($conn, $sql);
 while ($row = mysqli_fetch_array($resultado_consulta_mysql)) {
-echo "<option value=\"".utf8_encode($row['estado'])."\">".utf8_encode($row['estado'])."</option>";
+$estadoSeleccion=utf8_encode($row['estado']);
+echo "<option value=\"".$estadoSeleccion."\"";
+if ($estadoSeleccion == $estadoexpediente){echo "selected=\"selected\"";}
+echo ">".$estadoSeleccion."</option>";
+
 }?>
                                             </select></div>
                                             
@@ -237,7 +152,7 @@ echo "<option value=\"".utf8_encode($row['estado'])."\">".utf8_encode($row['esta
                                     	 <div class="form-group input-group">
                                             <span class="input-group-addon"><i class="fa fa-eur"></i>
                                             </span>
-                                            <input type="text" name="presupuesto" value="" class="form-control" placeholder="Enter text">
+                                            <input type="text" name="presupuesto" value="<?php echo $presupuesto?>" class="form-control" placeholder="Enter text">
                                         </div>  
                                         
                                         
@@ -245,6 +160,27 @@ echo "<option value=\"".utf8_encode($row['estado'])."\">".utf8_encode($row['esta
                                 </div>
                                 <!-- /.col-lg-6 (nested) -->
                                 <div class="col-lg-6">  
+                                
+                            <label>Persona</label> 
+                            <button type='submit' name='modpersona' class='btn btn-default btn-circle' value="<?php echo $_POST['idpersona'];?>"><p class='fa fa-pencil'/p></button>
+                            <button type='submit' name='crearpersona' class='btn btn-default btn-circle' value=""><b>+</b></button>
+                            <div  class="form-group input-group">
+                                            <select name="idpersona" class="form-control">    
+<?php       
+//listar personas           
+$sql = "SELECT * FROM `persona`";
+$resultado_consulta_mysql = mysqli_query($conn, $sql);
+while ($row = mysqli_fetch_array($resultado_consulta_mysql)) {
+$personaSeleccion=utf8_encode($row['idPersona']);
+echo "<option value=\"".$personaSeleccion."\"";
+if ($personaSeleccion == $idpersona){echo "selected=\"selected\"";}
+echo ">".utf8_encode($row['nombre'])." ".utf8_encode($row['apellidos'])."</option>";
+
+}?>
+						 </select></div>
+                                
+                                
+                                
                                     <label>Consultor</label>
                          			 <div class="form-group input-group">
                                             <select name="trabajador" class="form-control">
@@ -253,7 +189,12 @@ echo "<option value=\"".utf8_encode($row['estado'])."\">".utf8_encode($row['esta
 $sql = "SELECT * FROM `trabajador`";
 $resultado_consulta_mysql = mysqli_query($conn, $sql);
 while ($row = mysqli_fetch_array($resultado_consulta_mysql)) {
-echo "<option value=".utf8_encode($row['idTrabajador']).">".utf8_encode($row['nombre'])."</option>";
+$consultorSeleccion=utf8_encode($row['idTrabajador']);
+echo "<option value=\"".$consultorSeleccion."\"";
+if ($consultorSeleccion == $consultor){echo "selected=\"selected\"";}
+echo ">".utf8_encode($row['nombre'])."</option>";
+
+
 }
 ?>
                                             </select></div>
@@ -265,7 +206,11 @@ echo "<option value=".utf8_encode($row['idTrabajador']).">".utf8_encode($row['no
 $sql = "SELECT * FROM `trabajador`";
 $resultado_consulta_mysql = mysqli_query($conn, $sql);
 while ($row = mysqli_fetch_array($resultado_consulta_mysql)) {
-echo "<option value=".utf8_encode($row['idTrabajador']).">".utf8_encode($row['nombre'])."</option>";
+$analistaSeleccion=utf8_encode($row['idTrabajador']);
+$nombreanalistaSeleccion=utf8_encode($row['nombre']);
+echo "<option value=\"".$analistaSeleccion."\"";
+if ($analistaSeleccion == $analista){echo "selected=\"selected\"";}
+echo ">".$nombreanalistaSeleccion."</option>";
 }
 ?>
                                             </select></div>
@@ -279,7 +224,11 @@ echo "<option value=".utf8_encode($row['idTrabajador']).">".utf8_encode($row['no
 $sql = "SELECT * FROM `prioridadexpediente`";
 $resultado_consulta_mysql = mysqli_query($conn, $sql);
 while ($row = mysqli_fetch_array($resultado_consulta_mysql)) {
-echo "<option value=".utf8_encode($row['idPrioridad']).">".utf8_encode($row['prioridad'])."</option>";
+$prioridadSeleccion=utf8_encode($row['idPrioridad']);
+echo "<option value=\"".$prioridadSeleccion."\"";
+if ($prioridadSeleccion == $prioridad){echo "selected=\"selected\"";}
+echo ">".utf8_encode($row['prioridad'])."</option>";
+
 }
 ?>
                                             </select></div>               
@@ -292,23 +241,28 @@ echo "<option value=".utf8_encode($row['idPrioridad']).">".utf8_encode($row['pri
 $sql = "SELECT * FROM `estadosfacturacion`";
 $resultado_consulta_mysql = mysqli_query($conn, $sql);
 while ($row = mysqli_fetch_array($resultado_consulta_mysql)) {
-echo "<option value=\"".utf8_encode($row['estadoFacturacion'])."\">".utf8_encode($row['estadoFacturacion'])."</option>";
+$eFacturacionSeleccion=utf8_encode($row['estadoFacturacion']);
+echo "<option value=\"".$eFacturacionSeleccion."\"";
+if ($eFacturacionSeleccion== $estadofacturacion){echo "selected=\"selected\"";}
+echo ">".$eFacturacionSeleccion."</option>";
+
+
 }?>
                                             </select></div>
                                             <div class="form-group">
                                             <label>Observaciones</label>
-                                            <textarea  name="observacionesexpediente" value="" class="form-control" rows="3"></textarea>
-                                        </div>
-                                            </div>     </div> 
-                                    <button  type="submit" name="creaexpediente" value="creaexpediente" class="btn btn-default">Crear Expediente</button>
-                                    <button type="submit" name="actualizaexpediente" value="actualizaexpediente" class="btn btn-default">Actualizar Expediente</button>        
+                                            <textarea  name="observacionesexpediente" value="" class="form-control" rows="3"><?php echo $observacionesexpediente?></textarea>
+                                        </div></div></div>
+                                    <div class="form-group">
+                                    <button type="submit" name="creaexpediente"  class="btn btn-primary">Guardar</button>
+                            
                                   
                                     </form> 
                                                 
 
     
     
-                            </div>
+                            
                             <!-- /.row (nested) -->
 						</div>
 
@@ -344,82 +298,7 @@ echo "<option value=\"".utf8_encode($row['estadoFacturacion'])."\">".utf8_encode
 
 <?php
 
-   //Buscar persona
-   
-	if (isset($_POST['buscar'])) {
-    $sql = "SELECT `nombre` FROM `empresa`";
-    if ($conn->query($sql) === TRUE) {
-    echo "Buscando";   
-    } else {
-    echo "Error: " . $sql . "<br>" . $conn->error;
-	}
-    }  
-    //Crear empresa     
-    if (isset($_POST['creaempresa'])) {
-    $nombreempresa=$_POST['nombreempresa'];
-    $direccionempresa=$_POST['direccionempresa'];
-    $provinciaempresa=$_POST['provinciaempresa'];
-    $telempresa=$_POST['telempresa'];
-    $cifempresa=$_POST['cifempresa'];
-    $municipioempresa=$_POST['municipioempresa'];
-    $cpempresa=$_POST['cpempresa'];
-    $emailempresa=$_POST['emailempresa'];
-	$sql = "INSERT INTO `empresa`(`nombre`, `direccion`, `provincia`, `telefono`, `cif`, `municipio`, `cp`, `email`) 
-	VALUES (\"".utf8_decode($nombreempresa)."\",\"".utf8_decode($direccionempresa)."\",\"".utf8_decode($provinciaempresa)."\",\"".utf8_decode($telempresa)."\",\"".utf8_decode($cifempresa)."\",\"".utf8_decode($municipioempresa)."\",\"".utf8_decode($cpempresa)."\",\"".utf8_decode($emailempresa)."\")";	
-	
-	if ($conn->query($sql) === TRUE) {
-    echo "Empresa creada correctamente: ".$nombreempresa;   
-
-	} else {
-    echo "Error: " . $sql . "<br>" . $conn->error;
-	}
-    
-    }
-    //Actualizar empresa
-    if (isset($_POST['actualizaempresa'])) {
-        echo "Empresa actualizada correctamente";    
-    }
-    //Crear persona
-    if (isset($_POST['creapersona'])) {
-    $nombrepersona=$_POST['nombrepersona'];
-    $apellidospersona=$_POST['apellidospersona'];
-    $nomempresa=$_POST['nombreempresa'];
-    $telpersona=$_POST['telpersona'];
-    $tel2persona=$_POST['tel2persona'];
-    $emailpersona=$_POST['emailpersona'];
-    $observacionespersona=$_POST['observacionespersona'];
-    
-    $sql = "INSERT INTO `persona`(`nombre`, `apellidos`, `nomEmpresa`, `telefono`, `telefono2`, `email`, `observaciones`) 
-    VALUES (\"".utf8_decode($nombrepersona)."\",\"".utf8_decode($apellidospersona)."\",\"".utf8_decode($nomempresa)."\",\"".utf8_decode($telpersona)."\",\"".utf8_decode($tel2persona)."\",\"".utf8_decode($emailpersona)."\",\"".utf8_decode($observacionespersona)."\")";	
-	
-	if ($conn->query($sql) === TRUE) {
-	$idpersonaprincipal = $conn->insert_id;
-	$idpersona = $idpersonaprincipal;
-	echo "Persona creada correctamente: ".$nombrepersona." ".$apellidospersona.". ID ".$idpersonaprincipal;
-			
-			//Una vez creada la persona la ponemos como principal si así se indica	
-				if (isset($_POST['personaprincipal'])) {
-				$sql = "UPDATE `empresa` SET `personaPrincipal`=".$idpersonaprincipal." WHERE `nombre`=\"".utf8_decode($nomempresa)."\"";	
-				if ($conn->query($sql) === TRUE) {
-				echo " principal de ".utf8_decode($nomempresa);
-				}
-				}
-				
-	} else {
-    echo "Error: " . $sql . "<br>" . $conn->error;
-	}
-    }
-    
-    
-    //Actualizar persona
-    if (isset($_POST['actualizapersona'])) {
-        echo "Persona actualizada correctamente";    
-    }
-    
-    
-    
-      $idpersona = 2;
-    //Crear expediente
+     
     if (isset($_POST['creaexpediente'])) {
     $nombreempresa=$_POST['nombreempresa'];
     $nombreexpediente=$_POST['nombreexpediente'];
@@ -430,14 +309,36 @@ echo "<option value=\"".utf8_encode($row['estadoFacturacion'])."\">".utf8_encode
     $analista=$_POST['trabajador2'];
     $prioridad=$_POST['prioridad'];
     $estadofacturacion =$_POST['estadofacturacion'];
-    $idpersonae= $idpersona;
+    $idpersona=$_POST['idpersona'];
     $observacionesexpediente=$_POST['observacionesexpediente']; 
-    $sql = "INSERT INTO `expediente`(`nombre`, `tipoDeCaso`, `estado`, `cliente`, `idPersona`, 
+    
+    //modificar
+    if ($modificar){ 
+        $sql = "UPDATE `expediente` SET `nombre`=\"".utf8_decode($nombreexpediente)."\", `tipoDeCaso`=\"".utf8_decode($idtipo)."\", `estado`=\"".utf8_decode($estadoexpediente)."\",
+         `idCliente``=\"".utf8_decode($nombreempresa)."\",`idPersona`=\"".utf8_decode($idpersona)."\",`presupuesto`=\"".utf8_decode($presupuesto)."\",
+         `consultor`=\"".utf8_decode($consultor)."\",`analistaPrincipal`=\"".utf8_decode($analista)."\",`prioridad`=\"".utf8_decode($prioridad)."\",
+         `estadoFacturacion`=\"".utf8_decode($estadofacturacion)."\",`observaciones`=\"".utf8_decode($observacionesexpediente)."\" WHERE `idExpediente`=".$id;
+    	 
+		if ($conn->query($sql) === TRUE) {
+		echo "<script language=\"javascript\">window.location=\"crear?id=";
+		echo $id;
+		echo "\"</script>;";
+    	echo "Expediente correctamente";   
+
+		} else {
+    	echo "Error: " . $sql . "<br>" . $conn->error;
+		}
+
+
+    //crear
+    }else{
+    
+    $sql = "INSERT INTO `expediente`(`nombre`, `tipoDeCaso`, `estado`, `idCliente`, `idPersona`, 
     `presupuesto`, `consultor`, `analistaPrincipal`, `prioridad`, `fechaOportunidad`, 
     `estadoFacturacion`, `observaciones`) 
     VALUES (\"".utf8_decode($nombreexpediente)."\",\"".utf8_decode($idtipo)."\",
     \"".utf8_decode($estadoexpediente)."\",\"".utf8_decode($nombreempresa)."\",
-    \"".utf8_decode($idpersonae)."\",\"".utf8_decode($presupuesto)."\",\"".utf8_decode($consultor)."\",
+    \"".utf8_decode($idpersona)."\",\"".utf8_decode($presupuesto)."\",\"".utf8_decode($consultor)."\",
     \"".utf8_decode($analista)."\",\"".utf8_decode($prioridad)."\",CURRENT_DATE,
     \"".utf8_decode($estadofacturacion)."\",\"".utf8_decode($observacionesexpediente)."\")";
     
@@ -448,15 +349,31 @@ echo "<option value=\"".utf8_encode($row['estadoFacturacion'])."\">".utf8_encode
     echo "Error: " . $sql . "<br>" . $conn->error;
 	}
     }
-    
-    
-    
-    
-    
-    //Actualizar expediente
-    if (isset($_POST['actualizaexpediente'])) {
-        echo "Expediente actualizado correctamente";    
     }
-    
-    
+if (isset($_POST['crearempresa'])) {
+
+echo "<script language=\"javascript\">window.location=\"crearempresa";
+echo "\"</script>;";
+}
+if (isset($_POST['modempresa'])) {
+
+echo "<script language=\"javascript\">window.location=\"crearempresa?id=";
+echo $_POST['nombreempresa'];
+echo "\"</script>;";
+}
+
+if (isset($_POST['crearpersona'])) {
+
+echo "<script language=\"javascript\">window.location=\"crearpersona";
+echo "\"</script>;";
+}
+
+if (isset($_POST['modpersona'])) {
+
+echo "<script language=\"javascript\">window.location=\"crearpersona?id=";
+echo $_POST['idpersona'];
+echo "\"</script>;";
+}
+
+
     ?>
