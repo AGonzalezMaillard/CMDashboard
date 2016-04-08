@@ -18,6 +18,7 @@
                                 <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                                     <thead>
                                         <tr>
+                                        	<th>#</th>
                                             <th>EXPEDIENTE</th>
                                             <th>ESTADO</th>
                                             <th>CONSULTOR</th>
@@ -45,7 +46,8 @@
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     }
-    $sql = "SELECT * FROM expediente";
+    //$sql = "SELECT * FROM expediente";
+    $sql="SELECT e.`idExpediente`, e.`nombre`,c.`nombre` AS consultor, a.`nombre` AS analistaPrincipal, e.`estado`, e.`prioridad` AS idPrioridad, p.`prioridad`, e.`fechaOportunidad`,em.`nombre` AS nomcliente,e.`tipoDeCaso`, e.`estadoFacturacion`,e.`observaciones` FROM `expediente` e, `trabajador` c, `empresa` em, `trabajador` a, `prioridadexpediente` p WHERE e.`consultor`= c.`idTrabajador` and e. `analistaPrincipal`=a.`idTrabajador` and e.`prioridad` = p.`idPrioridad` and e.`idCliente` = em.`idEmpresa`";
     $result = mysqli_query($conn, $sql);
     if (!$result){
         echo "";
@@ -53,13 +55,16 @@
     if (mysqli_num_rows($result) > 0) {
         // output data of each row
         while($row = mysqli_fetch_assoc($result)) {
-            echo "<td>".$row["idExpediente"]."-".$row["nombre"];
+        
+       
+         	echo "<td><form action='crear' name='actualizaexpediente' method='get'><button type='submit' name='idexpedientemod' class='btn btn-default btn-circle' value=".$row["idExpediente"]."><i class='fa fa-pencil'/i></button></form>";
+            echo "</td><td>".$row["idExpediente"]."-".utf8_encode($row["nombre"]);
             echo "</td><td>".utf8_encode($row["estado"]);
-            echo "</td><td>".$row["consultor"];
-            echo "</td><td>".$row["analistaPrincipal"];
-            echo "</td><td>".$row["prioridad"];
-            echo "</td><td>".$row["fechaOportunidad"];
-            echo "</td><td>".$row["cliente"];
+            echo "</td><td>".utf8_encode($row["consultor"]);
+            echo "</td><td>".utf8_encode($row["analistaPrincipal"]);
+            echo "</td><td>".utf8_encode($row["prioridad"]);
+            echo "</td><td>".utf8_encode($row["fechaOportunidad"]);
+            echo "</td><td>".utf8_encode($row["nomcliente"]);
             echo "</td><td>".utf8_encode($row["tipoDeCaso"]);
              echo "</td><td>".utf8_encode($row["estadoFacturacion"]);
             echo "</td><td>".utf8_encode($row["observaciones"]."</td></tr>");
