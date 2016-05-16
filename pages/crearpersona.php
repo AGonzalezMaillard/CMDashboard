@@ -1,4 +1,4 @@
-<?php
+	<?php
     $servername = "localhost";
     $username = 'root';
     $password = "";
@@ -12,7 +12,7 @@
     $observacionespersona="";
     $personaprincipal=true;
     $modificar=false;
-    
+    $idempresamod="";
     $id= isset($_GET['id']) ? $_GET['id'] : "Autogenerado";
     $idpersona=isset($_GET['id']);
     // Create connection
@@ -45,14 +45,24 @@
    }
     
    }
-    
-    
+ /*
+    if (isset($_REQUEST['query'])) {
+$query = $_REQUEST['query'];
+$sql = "SELECT * FROM `empresa` WHERE nombre LIKE '%{$query}%'";
+$result = mysqli_query($conn, $sql);
+$array = array();
+while($row = mysqli_fetch_assoc($result)){
+$array[] = $row['country'];
+}
+echo json_encode ($array); //Return the JSON Array
+}
+*/
     
     ?>
     <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">Crear persona</h1>
+                    <h1 class="page-header">Persona de contacto</h1>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
@@ -61,38 +71,57 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            Persona
+                            Datos de contacto
                         </div>
                         <div class="panel-body">
                             <div class="row">
                                 <div class="col-lg-6">
                                     <form role="form" action="/crearpersona<?php if (isset($_GET['id'])){echo '?id='.$id;}?>" method="post">
-                                     
-                                    <label>Empresa</label><button type='submit' name='crearempresa' class='btn btn-default btn-circle' value="<?php echo $_POST['nombreempresa'];?>"><p class='fa fa-pencil'/p></button>
+                                    <label>Empresa</label><button type='submit' name='crearempresa' class='btn btn-default btn-circle' value="<?php echo $_POST['nombreempresa'];?>">
+                                            <p class='fa fa-pencil'/p></button>
+                                        <button type='submit' name='crearempresa2' class='btn btn-default btn-circle' value=""><b>+</b></button>
+
+                                    <script language="javascript">
+                                    $(document).ready(function() {
+                                    $( "input.buscar" ).autocomplete({
+                                    source: "/crearpersona-ajax.php",
+                                    minLength: 1,
+                                    select: function( event, ui ) {
+                                    $("#idEmpresa").val(ui.item.id);
+                                     }
+                                       });
+                                         });
+                                    </script>
+                                    <div class="form-group">
+                                    <input type="text" name="nombreempresa"  class="buscar form-control" placeholder="Enter text" value="<?php echo $nomempresa?>">
+                                    <input id="idEmpresa" type="hidden" name="idEmpresa" size="20" class="" placeholder="">
+                                    </div>
+
+
 <!--                                   <div class="form-group input-group">
                                             <input type="text" name="nombreempresa" value="" class="form-control" placeholder="Enter text">
                                             <span class="input-group-btn">
                                                 <button class="btn btn-default" type="submit" name="buscar"><i class="fa fa-search"></i>
                                                 </button>
                                             </span>
-                                        </div>-->
+                                        </div>
                                         <div class="form-group input-group">
                                             <select name="nombreempresa" class="form-control">
-<?php     
-//listar tipos de caso             
-$sql = "SELECT `nombre` FROM `empresa`";
+<?php
+//listar              
+$sql = "SELECT * FROM `empresa`";
 $resultado_consulta_mysql = mysqli_query($conn, $sql);
 while ($row = mysqli_fetch_array($resultado_consulta_mysql)) {
 $nombreempresasseleccion=utf8_encode($row['nombre']);
-echo "<option value=\"".utf8_encode($row['nombre'])."\"";
+echo "<option value=\"".utf8_encode($row['idEmpresa'])."\"";
 if ($nombreempresasseleccion == $nomempresa){echo "selected=\"selected\"";}
 echo ">".$nombreempresasseleccion."</option>";
 }?>
-                                            </select></div>  
-                                          
-                                     <div class="form-group">
-                                            <label>ID: <?php echo $id?></label>
-                                        </div>      
+                                            </select></div>
+                                          -->
+<!--                                     <div class="form-group">-->
+<!--                                            <label>ID: --><?php //echo $id?><!--</label>-->
+<!--                                        </div>      -->
                                             
                                 
                                      <div class="form-group">
@@ -134,7 +163,8 @@ echo ">".$nombreempresasseleccion."</option>";
                                         </div>
                                       <div class="form-group">  
                                             <input type="checkbox" name="personaprincipal" value="" <?php if($personaprincipal){echo "checked";}?> Persona principal<br>
-                           			</div>
+                                          <label>Persona principal</label>
+                                      </div>
                                 </div>
                                 <!-- /.col-lg-6 (nested) -->
                             </div>
@@ -160,17 +190,11 @@ echo ">".$nombreempresasseleccion."</option>";
     </div>
     <!-- /#wrapper -->
 
-    <!-- jQuery -->
+    <!--
     <script src="../bower_components/jquery/dist/jquery.min.js"></script>
-
-    <!-- Bootstrap Core JavaScript -->
     <script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-
-    <!-- Metis Menu Plugin JavaScript -->
     <script src="../bower_components/metisMenu/dist/metisMenu.min.js"></script>
-
-    <!-- Custom Theme JavaScript -->
-    <script src="../dist/js/sb-admin-2.js"></script>
+    <script src="../dist/js/sb-admin-2.js"></script> -->
 
 </body>
 
@@ -193,6 +217,13 @@ echo ">".$nombreempresasseleccion."</option>";
         $sql = "UPDATE `persona` SET `nombre`=\"".utf8_decode($nombrepersona)."\", `apellidos`=\"".utf8_decode($apellidospersona)."\", `nomEmpresa`=\"".utf8_decode($nomempresa)."\", `telefono`=\"".utf8_decode($telpersona)."\",`telefono2`=\"".utf8_decode($tel2persona)."\",`email`=\"".utf8_decode($emailpersona)."\",`observaciones`=\"".utf8_decode($observacionespersona)."\" WHERE `idPersona`=".$id;
     	 
 		if ($conn->query($sql) === TRUE) {
+            //Una vez creada la persona la ponemos como principal si así se indica
+            if (isset($_POST['personaprincipal'])) {
+                $sql = "UPDATE `empresa` SET `personaPrincipal`=".$id." WHERE `nombre`=\"".utf8_decode($nomempresa)."\"";
+                if ($conn->query($sql) === TRUE) {
+                    echo " principal de ".utf8_decode($nomempresa);
+                }
+            }
 		echo "<script language=\"javascript\">window.location=\"crearpersona?id=";
 		echo $id;
 		echo "\"</script>;";
@@ -230,12 +261,17 @@ echo ">".$nombreempresasseleccion."</option>";
 		}
     }
 }
-    
+
 if (isset($_POST['crearempresa'])) {
 echo "<script language=\"javascript\">window.location=\"crearempresa?id=";
-echo $_POST['nombreempresa'];
+echo $_POST['idEmpresa'];
 echo "\"</script>;";
 }
 
+if (isset($_POST['crearempresa2'])) {
+    echo "<script language=\"javascript\">window.location=\"crearempresa";
+    echo "\"</script>;";
+}
+ 
  
     ?>
