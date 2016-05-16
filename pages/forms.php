@@ -1,4 +1,4 @@
-		<?php
+	<?php
     $servername = "localhost";
     $username = 'root';
     $password = "";
@@ -15,9 +15,8 @@
     $idpersona="";
     $observacionesexpediente=""; 
     $modificar=false;
-        
     $id= isset($_GET['idexpedientemod']) ? $_GET['idexpedientemod'] : "Autogenerado";
-
+    //$idexp=$_GET['idexpedientemod'];
     // Create connection
     $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -46,7 +45,7 @@
     $estadofacturacion=utf8_encode($row["estadoFacturacion"]);
     $idpersona=utf8_encode($row["idPersona"]);
     $observacionesexpediente=utf8_encode($row["observaciones"]);
-    $modificar=false;
+
     
  
     
@@ -63,7 +62,7 @@
     <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">Crear caso</h1>
+                    <h1 class="page-header">Expediente</h1>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
@@ -73,14 +72,14 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            Expediente
+                            Datos del caso
                           
                         </div>
                         <div class="panel-body">
                             <div class="row">
                                 <div class="col-lg-6">                                   
                                     <div class="form-group">
-                                    <form role="form" action="/crear" method="post">
+                                    <form role="form" action="/crear<?php if (isset($_GET['idexpedientemod'])){echo '?idexpedientemod='.$id;}?>" method="post">
                                             <label>Id Expediente</label>
                                             <p class="form-control-static"><?php echo $id;?></p>
                                         </div>
@@ -116,7 +115,7 @@ if ($idEmpresaSeleccion == $nombreempresa){echo "selected=\"selected\"";}
 echo ">".utf8_encode($row['nombre'])."</option>";
 }?>
                                             </select>
-                                            </div>  
+                                            </div>
                                           
                                           <label>Tipo de Caso</label>
                          			 		<div class="form-group input-group">
@@ -310,17 +309,16 @@ echo ">".$eFacturacionSeleccion."</option>";
     $prioridad=$_POST['prioridad'];
     $estadofacturacion =$_POST['estadofacturacion'];
     $idpersona=$_POST['idpersona'];
-    $observacionesexpediente=$_POST['observacionesexpediente']; 
-    
+    $observacionesexpediente=$_POST['observacionesexpediente'];
+
     //modificar
     if ($modificar){ 
-        $sql = "UPDATE `expediente` SET `nombre`=\"".utf8_decode($nombreexpediente)."\", `tipoDeCaso`=\"".utf8_decode($idtipo)."\", `estado`=\"".utf8_decode($estadoexpediente)."\",
-         `idCliente``=\"".utf8_decode($nombreempresa)."\",`idPersona`=\"".utf8_decode($idpersona)."\",`presupuesto`=\"".utf8_decode($presupuesto)."\",
-         `consultor`=\"".utf8_decode($consultor)."\",`analistaPrincipal`=\"".utf8_decode($analista)."\",`prioridad`=\"".utf8_decode($prioridad)."\",
-         `estadoFacturacion`=\"".utf8_decode($estadofacturacion)."\",`observaciones`=\"".utf8_decode($observacionesexpediente)."\" WHERE `idExpediente`=".$id;
+        $sql = "UPDATE `expediente` SET `nombre`=\"".utf8_decode($nombreexpediente)."\", `tipoDeCaso`=\"".utf8_decode($idtipo)."\", `estado`=\"".utf8_decode($estadoexpediente)."\", `idCliente`=\"".utf8_decode($nombreempresa)."\", `idPersona`=\"".utf8_decode($idpersona)."\", `presupuesto`=\"".utf8_decode($presupuesto)."\",
+         `consultor`=\"".utf8_decode($consultor)."\", `analistaPrincipal`=\"".utf8_decode($analista)."\", `prioridad`=\"".utf8_decode($prioridad)."\",
+         `estadoFacturacion`=\"".utf8_decode($estadofacturacion)."\", `observaciones`=\"".utf8_decode($observacionesexpediente)."\" WHERE `idExpediente`=".$id;
     	 
 		if ($conn->query($sql) === TRUE) {
-		echo "<script language=\"javascript\">window.location=\"crear?id=";
+		echo "<script language=\"javascript\">window.location=\"crear?idexpedientemod=";
 		echo $id;
 		echo "\"</script>;";
     	echo "Expediente correctamente";   
@@ -344,6 +342,9 @@ echo ">".$eFacturacionSeleccion."</option>";
     
 	if ($conn->query($sql) === TRUE) {
 	$idexpediente = $conn->insert_id;
+        echo "<script language=\"javascript\">window.location=\"crear?idexpedientemod=";
+        echo $idexpediente;
+        echo "\"</script>;";
 	echo "Expediente creado correctamente: ".$idexpediente."-".$nombreexpediente;
 	} else {
     echo "Error: " . $sql . "<br>" . $conn->error;
