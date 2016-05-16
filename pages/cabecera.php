@@ -11,6 +11,7 @@
 
     <title>INCIDE - CMDashboard</title>
     <link rel="icon" type="image/ico" href="favicon.ico">
+
     <!-- Bootstrap Core CSS -->
     <link href="../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -29,6 +30,31 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+
+    <!-- jQuery -->
+    <!--
+    <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+
+ 
+    <script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+ 
+    <script src="../bower_components/metisMenu/dist/metisMenu.min.js"></script>
+
+ 
+    <script src="../bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
+    <script src="../bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+    <script src="../js/typeahead.js"></script>
+
+    <script src="../dist/js/sb-admin-2.js"></script>
+    -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 
 </head>
 
@@ -70,11 +96,11 @@
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
                         <li class="sidebar-search">
-                           <form role="form" action="/tablas" method="post">
+                           <form role="form" action="/busquedas" method="get">
                            <div class="input-group custom-search-form">
-                                <input type="text" class="form-control" placeholder="Search...">
+                                <input type="text" name="id" value="" class="form-control" placeholder="Search...">
                                 <span class="input-group-btn">
-                                <button type="submit" name="buscar" class="btn btn-default" type="button">
+                                <button type="submit" class="btn btn-default" type="button">
                                  <i class="fa fa-search"></i>              
                                 </button>
                                 </form>  
