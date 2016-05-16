@@ -42,21 +42,21 @@
                         <h3 class="panel-title">Ingresa email y contraseña</h3>
                     </div>
                     <div class="panel-body">
-                        <form role="form">
+                        <form action="/" method="post" role="form" class="login">
                             <fieldset>
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="E-mail" name="email" type="email" autofocus>
+                                    <input class="form-control" placeholder="Usuario" name="userid" autofocus>
                                 </div>
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="Password" name="password" type="password" value="">
+                                    <input class="form-control" placeholder="Contraseña" name="password" type="password" value="">
                                 </div>
-                                <div class="checkbox">
-                                    <label>
-                                        <input name="remember" type="checkbox" value="Remember Me">Recordar conexión
-                                    </label>
-                                </div>
-                                <!-- Change this to a button or input when using this as a form -->
-                                <a href="panel" class="btn btn-lg btn-success btn-block">Login</a>
+                                <!-- <div class="checkbox">
+                                     <label>
+                                         <input name="remember" type="checkbox" value="Remember Me">Recordar conexión
+                                     </label>
+                                 </div>-->
+                                 <!-- Change this to a button or input when using this as a form -->
+                                <button type='submit' name="login" class="btn btn-lg btn-success btn-block">Login
                             </fieldset>
                         </form>
                     </div>
